@@ -1,0 +1,64 @@
+{% extends 'main.html' %}
+
+<!-- Title -->
+{% block title %}
+Flask | Todo
+{% endblock title %}
+
+<!-- Body -->
+{% block body %}
+<!-- Form -->
+<div class="container mt-5">
+    <h2>Add a Todo</h2>
+    <form action="/" method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Todo Title</label>
+            <input type="text" name="title" class="form-control" id="title" />
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Description</label>
+            <input type="text" name="desc" class="form-control" id="desc" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<!-- End of Form -->
+
+<div class="container mt-5">
+    <h2>Todos</h2>
+    {% if allTodo|length == 0 %}
+    <div class="alert alert-primary" role="alert">
+        No Record Found! Add New Todo
+    </div>
+    {% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">SNo.</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Time</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for todo in allTodo %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{todo.title}}</td>
+                <td>{{todo.desc}}</td>
+                <td>{{todo.date_created}}</td>
+                <td>
+                    <a href="/update/{{todo.sno}}" class="btn btn-primary btn-sm mx-1">Edit</a>
+                    <a href="/delete/{{todo.sno}}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+</div>
+
+{% endblock body %}

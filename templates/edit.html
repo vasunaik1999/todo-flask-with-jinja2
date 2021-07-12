@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+<!-- Title -->
+{% block title %}
+Flask | Edit Todo
+{% endblock title %}
+
+<!-- Body -->
+{% block body %}
+<!-- Form -->
+<div class="container mt-5">
+    <h2>Edit Todo</h2>
+    <form action="/update/{{todo.sno}}" method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Todo Title</label>
+            <input type="text" name="title" value="{{todo.title}}" class="form-control" id="title" />
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">Description</label>
+            <input type="text" name="desc" value="{{todo.desc}}" class="form-control" id="desc" />
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+<!-- End of Form -->
+{% endblock body %}
