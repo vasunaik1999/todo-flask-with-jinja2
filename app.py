@@ -65,11 +65,9 @@ def update(sno):
     return render_template('edit.html', todo=todo)
 
 
-# @app.route("/show")
-# def show():
-#     allTodo = Todo.query.all()
-#     print(allTodo)
-#     return "<p>Products Page</p>"
+@app.route('/documentation')
+def documentation():
+    return render_template('documentation.html')
 
 
 if __name__ == "__main__":

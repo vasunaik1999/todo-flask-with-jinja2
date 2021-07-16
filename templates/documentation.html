@@ -1,0 +1,354 @@
+{% extends 'main.html' %}
+
+<!-- Title -->
+{% block title %}
+Flask | Documentation
+{% endblock title %}
+
+<!-- Body -->
+{% block body %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1>Todo app with Flask and Jinja2</h1>
+            <p>I have made this as a practice project using Flask and Jinja2 by creating an virtual environment.</p>
+
+            <h3>Step 1: Setting Up Project</h3>
+            <p>Firstly, create a new folder and open it in VS Codes. If you don't have python installed then install it
+                from here <a href="https://www.python.org/downloads/">Python Download</a> </p>
+
+            <h3>Step 2: Create Virtual Environment</h3>
+            <p>To create virtual environment, firstly open new terminal and run below command.</p>
+            <pre><code class="language-powershell">$ pip install virtualenv</code></pre>
+            <p>Now after installing Virtual Environment, now run below code to create virtual environment.</p>
+            <pre><code class="language-plaintext">$ virtualenv env</code></pre>
+
+            <p>Using this Virtual Environment, you can use different version, it will not conflict with the system.</p>
+
+            <p>If you are getting any error then can try below command and select 'A'</p>
+            <pre><code class="language-plaintext">$ Set-ExecutionPolicy unrestricted</code></pre>
+            <p>Now activate virtual envirnment by writing below command in powershell</p>
+            <pre><code class="language-plaintext">.\env\Scripts\activate.ps1</code></pre>
+
+            <h3>Step 3: Install Flask</h3>
+            <p>Now you are inside the virtual environment, now u can install Flask inside the virtual Environment.</p>
+            <pre><code class="language-plaintext">pip install flask</code></pre>
+            <p>Now inside the main directory create one new file with name app.py</p>
+            <pre><code class="language-python">    from flask import Flask
+
+    app = Flask(__name__)
+
+    @app.route("/")
+    def hello_world():
+    return "<p>Hello, World!</p>"</code></pre>
+
+            <p>To run your app use below command inside virtual environment</p>
+            <pre><code class="language-plaintext">python .\app.py</code></pre>
+
+            <p>Now create two new folders in main directory, one with name 'static', in which we will store all the
+                static files like images, css, js, etc and second folder with name 'templates', in which we will store
+                all the templates like html files. Now create one index.html file inside static folder.</p>
+            <p>Now create one route for index.html file inside app.py file as shown below</p>
+            <pre><code class="language-python">    @app.route("/")
+    def hello_world():
+    return render_template('index.html')</code></pre>
+
+            <h3>Step 4: Installing Database and Connection</h3>
+            <p>Now lets install <a
+                    href="https://flask-sqlalchemy.palletsprojects.com/en/2.x/config/?highlight=configuration">SQLAlchemy</a>
+                for flask using below command</p>
+            <pre><code class="language-plaintext">pip install flask-sqlalchemy</code></pre>
+            <p>Now inside app.py import SQLAlchemy, as shown below</p>
+
+            <pre><code class="language-python">    from flask_sqlalchemy import SQLAlchemy
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///flaskTodo.db"
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+ 
+    db = SQLAlchemy(app)</code></pre>
+
+            <p>Now let's create database table with model Todo</p>
+            <pre><code class="language-python">    class Todo(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    desc = db.Column(db.String(500), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+                
+    def __repr__(self) -> str:
+        return f"{self.sno} - {self.title}"</code></pre>
+
+            <p>Now open python interpreter by typing below comman in terminal (it should be in virtual environment)</p>
+            <pre><code class="language-plaintext">python</code></pre>
+            <p>Now use below command to create database, the database will get created in mian directory</p>
+            <pre><code class="language-plaintext">>>> from app import db
+>>> db.create_all()</code></pre>
+
+            <p>To view content(data) of your database, you can drag and drop your .db file in <a
+                    href="https://inloop.github.io/sqlite-viewer/">SQLite Viewer</a>.</p>
+
+            <h3>Step 5: Writing Code</h3>
+            <p>In VS Codes install Jinja2 Snippet Kit extension. we will be using Jinja2 syntax.</p>
+            <p>Now create one new file main.html, inside it write below code</p>
+
+            <pre><code class="language-html">    &lt;!DOCTYPE html&gt;
+    &lt;html lang="en"&gt;
+
+    &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+        &lt;!-- Link external style sheet --&gt;
+        &lt;link href="&#123;&#123; url_for('static', filename='css/style.css') &#125;&#125;" rel="stylesheet"&gt;
+        &lt;!-- Link External Js File --&gt;
+        &lt;script src="&#123;&#123; url_for('static', filename='js/index.js') &#125;&#125;" def&gt;&lt;/script&gt;
+        &lt;title&gt;&#123;% block title %&#125; &#123;% endblock title %&#125;&lt;/title&gt;
+
+        &lt;!-- bootstrap --&gt;
+        &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" /&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+
+        &lt;!-- Navbar --&gt;
+        &lt;nav class="navbar navbar-expand-lg navbar-dark bg-dark"&gt;
+            &lt;div class="container-fluid"&gt;
+                &lt;a class="navbar-brand" href="/"&gt;Flask&lt;/a&gt;
+                &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation"&gt;
+                    &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+                &lt;/button&gt;
+                &lt;div class="collapse navbar-collapse" id="navbarSupportedContent"&gt;
+                    &lt;ul class="navbar-nav me-auto mb-2 mb-lg-0"&gt;
+                        &lt;li class="nav-item"&gt;
+                            &lt;a class="nav-link active" aria-current="page" href="/"&gt;Home&lt;/a&gt;
+                        &lt;/li&gt;
+                        &lt;li class="nav-item"&gt;
+                            &lt;a class="nav-link" href="/documentation"&gt;Documentation&lt;/a&gt;
+                        &lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/nav&gt;
+        &lt;!-- End of NavBar --&gt;
+
+        &#123;% block body %&#125;
+
+        &#123;% endblock body %&#125;
+
+        &lt;!-- bootstrap --&gt;
+        &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"&gt;&lt;/script&gt;
+    &lt;/body&gt;
+
+    &lt;/html&gt;</code></pre>
+
+            <p>Below is the code of index.html file</p>
+            <pre><code class="language-html">    &#123;% extends 'main.html' %&#125;
+    &lt;!-- Title --&gt;
+    &#123;% block title %&#125;
+    Flask | Todo
+    &#123;% endblock title %&#125;
+    
+    &lt;!-- Body --&gt;
+    &#123;% block body %&#125;
+    &lt;!-- Form --&gt;
+    &lt;div class="container mt-5"&gt;
+        &lt;div class="card"&gt;
+            &lt;div class="card-body"&gt;
+                &lt;h2&gt;Add a Todo&lt;/h2&gt;
+                &lt;form action=" /" method="POST"&gt;
+                    &lt;div class="mt-3"&gt;
+                        &lt;label for="title" class="form-label"&gt;Todo Title&lt;/label&gt;
+                        &lt;input required type="text" name="title" class="form-control" id="title"
+                            placeholder="Enter Todo Title..." /&gt;
+                    &lt;/div&gt;
+                    &lt;div class="mt-3"&gt;
+                        &lt;label for="desc" class="form-label"&gt;Description&lt;/label&gt;
+                        &lt;input required type="text" name="desc" class="form-control" id="desc"
+                            placeholder="Enter Todo Description..." /&gt;
+                    &lt;/div&gt;
+                    &lt;button type="submit" class="btn btn-dark mt-3"&gt;Submit&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- End of Form --&gt;
+    
+    &lt;div class="container mt-5"&gt;
+        &lt;div class="card"&gt;
+            &lt;div class="card-body"&gt;
+                &lt;h2&gt;Todos&lt;/h2&gt;
+                &#123;% if allTodo|length == 0 %&#125;
+                &lt;div class="alert alert-primary" role="alert"&gt;
+                    No Record Found! Add New Todo
+                &lt;/div&gt;
+                &#123;% else %&#125;
+                &lt;div class="table-responsive"&gt;
+                    &lt;table class="table"&gt;
+                        &lt;thead&gt;
+                            &lt;tr&gt;
+                                &lt;th scope="col"&gt;SNo.&lt;/th&gt;
+                                &lt;th scope="col"&gt;Title&lt;/th&gt;
+                                &lt;th scope="col"&gt;Description&lt;/th&gt;
+                                &lt;th scope="col"&gt;Time&lt;/th&gt;
+                                &lt;th scope="col"&gt;Actions&lt;/th&gt;
+                            &lt;/tr&gt;
+                        &lt;/thead&gt;
+                        &lt;tbody&gt;
+    
+                            &#123;% for todo in allTodo %&#125;
+                            &lt;tr&gt;
+                                &lt;th scope="row"&gt;&#123;&#123;loop.index&#125;&#125;&lt;/th&gt;
+                                &lt;td&gt;&#123;&#123;todo.title&#125;&#125;&lt;/td&gt;
+                                &lt;td&gt;&#123;&#123;todo.desc&#125;&#125;&lt;/td&gt;
+                                &lt;td&gt;&#123;&#123;todo.date_created&#125;&#125;&lt;/td&gt;
+                                &lt;td&gt;
+                                    &lt;a href="/update/&#123;&#123;todo.sno&#125;&#125;" class="btn btn-dark btn-sm mx-1"&gt;Edit&lt;/a&gt;
+                                    &lt;a href="/delete/&#123;&#123;todo.sno&#125;&#125;" class="btn btn-outline-dark btn-sm"&gt;Delete&lt;/a&gt;
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                            &#123;% endfor %&#125;
+                        &lt;/tbody&gt;
+                    &lt;/table&gt;
+                &lt;/div&gt;
+                &#123;% endif %&#125;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    
+    &#123;% endblock body %&#125;</code></pre>
+
+            <p>Below is the code of edit.html file</p>
+
+            <pre><code class="language-html">    &#123;% extends 'main.html' %&#125;
+    &lt;!-- Title --&gt;
+    &#123;% block title %&#125;
+    Flask | Edit Todo
+    &#123;% endblock title %&#125;
+
+    &lt;!-- Body --&gt;
+    &#123;% block body %&#125;
+    &lt;!-- Form --&gt;
+    &lt;div class="container mt-5"&gt;
+        &lt;div class="card"&gt;
+            &lt;div class="card-body"&gt;
+                &lt;h2&gt;Edit Todo&lt;/h2&gt;
+                &lt;form action="/update/&#123;&#123;todo.sno&#125;&#125;" method="POST"&gt;
+                    &lt;div class="mb-3"&gt;
+                        &lt;label for="title" class="form-label"&gt;Todo Title&lt;/label&gt;
+                        &lt;input required type="text" name="title" value="&#123;&#123;todo.title&#125;&#125;" class="form-control" id="title" /&gt;
+                    &lt;/div&gt;
+                    &lt;div class="mb-3"&gt;
+                        &lt;label for="desc" class="form-label"&gt;Description&lt;/label&gt;
+                        &lt;input required type="text" name="desc" value="&#123;&#123;todo.desc&#125;&#125;" class="form-control" id="desc" /&gt;
+                    &lt;/div&gt;
+                    &lt;button type="submit" class="btn btn-dark"&gt;Update&lt;/button&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- End of Form --&gt;
+    &#123;% endblock body %&#125;</code></pre>
+
+            <p>The content of app.py file is</p>
+            <pre><code class="language-python">    from flask import Flask, render_template, request, redirect
+    from flask_sqlalchemy import SQLAlchemy
+    from datetime import datetime
+
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///flaskTodo.db"
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db = SQLAlchemy(app)
+
+
+    class Todo(db.Model):
+        sno = db.Column(db.Integer, primary_key=True)
+        title = db.Column(db.String(200), nullable=False)
+        desc = db.Column(db.String(500), nullable=False)
+        date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+        def __repr__(self) -> str:
+            return f"{self.sno} - {self.title}"
+
+
+    # Routes
+    @app.route("/", methods=['GET', 'POST'])
+    def hello_world():
+        # if post req then add todo with form value
+        if request.method == 'POST':
+            title = request.form['title']
+            desc = request.form['desc']
+            # Add Todo
+            todo = Todo(title=title, desc=desc)
+            db.session.add(todo)
+            db.session.commit()
+
+        # Query to get all todo
+        allTodo = Todo.query.all()
+
+        # pass all Todos to index.html
+        return render_template('index.html', allTodo=allTodo)
+
+    # Delete Todo
+    @app.route('/delete/&lt;int:sno&gt;')
+    def delete(sno):
+        todo = Todo.query.filter_by(sno=sno).first()
+        db.session.delete(todo)
+        db.session.commit()
+        return redirect("/")
+
+    # Edit Todo
+
+
+    @app.route('/update/&lt;int:sno&gt;',  methods=['GET', 'POST'])
+    def update(sno):
+        if request.method == 'POST':
+            title = request.form['title']
+            desc = request.form['desc']
+            todo = Todo.query.filter_by(sno=sno).first()
+            todo.title = title
+            todo.desc = desc
+            db.session.add(todo)
+            db.session.commit()
+            return redirect("/")
+
+        todo = Todo.query.filter_by(sno=sno).first()
+        return render_template('edit.html', todo=todo)
+
+
+    @app.route('/documentation')
+    def documentation():
+        return render_template('documentation.html')
+
+
+    if __name__ == "__main__":
+        app.run(debug=True)</code></pre>
+
+            <h3>Step 6: Deployment</h3>
+            <p>We will deploy this code on Heroku for free.</p>
+            <pre><code class="language-plaintext">pip install gunicorn
+pip freeze >  requirements.txt</code></pre>
+            <p>It will generate requirements.txt file, which will contain all the packages which is required to run this
+                app.</p>
+            <p>Now create a new file without extension with name 'Procfile'</p>
+            <pre><code class="language-html">web:gunicorn app:app</code></pre>
+            <p>Now open new terminal and run below commands, before that create an <a
+                    href="https://signup.heroku.com/login">Heroku</a> account.</p>
+            <pre><code class="language-html">heroku login
+git init
+git add .
+git commit -m "initial commit"
+heroku create app-name
+it.heroku.com/app-name.git
+git push heroku master</code></pre>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+
+<!-- 
+    <pre><code class="language-plaintext"></code></pre>
+ -->
